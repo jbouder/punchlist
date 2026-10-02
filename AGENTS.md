@@ -12,8 +12,10 @@ motion differs. Keep it small: this is a talk demo, not a product.
 
 React 19 + TypeScript + Vite 7 · Tailwind CSS v4 (CSS-first, configured in
 `src/index.css`) · stock shadcn `base-lyra` on Base UI (`src/components/ui`,
-CLI-managed, do not hand-edit) · Phosphor icons · Biome. No router, no data
-library, no tests (verify in the browser).
+CLI-managed, do not hand-edit) · Phosphor icons · Biome. No router library
+(`src/lib/router.ts` is a small `pushState` router; pages live in
+`src/pages`, shared state in `src/providers`), no data library, no tests
+(verify in the browser).
 
 ## Rules
 
@@ -28,7 +30,14 @@ library, no tests (verify in the browser).
 - **Tokens, not literals.** `var(--duration-base)`, `var(--ease-emphasized)`,
   or Tailwind's `duration-(--duration-base)` form (parentheses, not brackets).
 - **Animate `opacity` and `transform` only** (`translate`, `scale`). Position
-  changes go through FLIP or View Transitions.
+  changes go through FLIP or View Transitions. The one exception is the
+  Analytics counter, which transitions a registered custom property.
+- **Scope `view-transition-name`s** with `html[data-vt="…"]` (set by
+  `withViewTransition(update, enabled, type)`), so an element is only
+  snapshotted separately during its own kind of transition.
+- **New pages**: add the path to `PATHS` in `src/lib/router.ts`, the component
+  to `PAGES` in `AppShell.tsx`, and the nav item in `Sidebar.tsx`. Page order
+  in `PATHS` decides the slide direction.
 - Motion styling belongs in `src/index.css` or at the call site, never in
   `src/components/ui/*`.
 

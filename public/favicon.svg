@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Punchlist</title>
+  <rect width="64" height="64" fill="#ebebeb"/>
+  <path d="M20 50V14h14.5c8.6 0 14 4.9 14 12.3S43.1 38.7 34.5 38.7H27.6V50H20Zm7.6-17.9h6.3c4.3 0 6.9-2.2 6.9-5.8s-2.6-5.7-6.9-5.7h-6.3v11.5Z" fill="#1a1a1a"/>
+</svg>

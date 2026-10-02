@@ -9,18 +9,37 @@ import { flushSync } from 'react-dom';
 
 /* ---------- View Transitions ---------- */
 
-/** Run a React state update inside a view transition, or just run it. */
-export function withViewTransition(update: () => void, enabled: boolean) {
+/**
+ * Run a React state update inside a view transition, or just run it.
+ *
+ * `type` lands on `<html data-vt="…">` for the life of the transition so the
+ * stylesheet can scope `view-transition-name`s: the list only gets its own
+ * snapshot during a filter change, the page only during navigation.
+ */
+export function withViewTransition(
+  update: () => void,
+  enabled: boolean,
+  type = 'default',
+) {
   if (!enabled || typeof document.startViewTransition !== 'function') {
     update();
     return;
   }
+  const root = document.documentElement;
+  root.dataset.vt = type;
   const transition = document.startViewTransition(() => {
     flushSync(update);
   });
   // A skipped transition (hidden tab, another one in flight) rejects these;
   // the DOM update has still happened, so there is nothing to handle.
-  transition.finished.catch(() => undefined);
+  transition.ready.catch(() => undefined);
+  transition.finished
+    .catch(() => undefined)
+    .then(() => {
+      if (root.dataset.vt === type) {
+        delete root.dataset.vt;
+      }
+    });
 }
 
 /* ---------- Web Animations API ---------- */

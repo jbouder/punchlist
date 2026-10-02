@@ -11,6 +11,7 @@ export interface Task {
   due: string;
   status: Status;
   createdAt: number;
+  completedAt?: number;
 }
 
 export const ASSIGNEES = ['JB', 'AK', 'MR', 'SL'] as const;
@@ -46,6 +47,7 @@ function task(
     due,
     status,
     createdAt: Date.now() - seq * 60_000,
+    completedAt: status === 'done' ? Date.now() - seq * 20_000 : undefined,
   };
 }
 
@@ -117,7 +119,9 @@ export function loadTasks(): Task[] {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Task[];
-      if (Array.isArray(parsed) && parsed.length > 0) {
+      // An empty array is a real state (the user cleared the list); only a
+      // missing or corrupt key falls back to the sample data.
+      if (Array.isArray(parsed)) {
         return parsed;
       }
     }
