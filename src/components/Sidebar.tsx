@@ -3,9 +3,12 @@ import {
   GearSixIcon,
   type Icon,
   ListChecksIcon,
+  MoonIcon,
+  SunIcon,
   UsersThreeIcon,
 } from '@phosphor-icons/react';
 import type { MouseEvent } from 'react';
+import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { href, navigate, type Path, useRoute } from '@/lib/router';
@@ -13,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { useMotion } from '@/providers/MotionProvider';
 import { useSettings } from '@/providers/SettingsProvider';
 import { useTasks } from '@/providers/TasksProvider';
+import { useTheme } from '@/providers/ThemeProvider';
 
 interface NavItem {
   path: Path;
@@ -28,9 +32,10 @@ const NAV: NavItem[] = [
 ];
 
 /**
- * Left rail on desktop, top bar on phones. The active-item background carries
- * `view-transition-name: nav-active` during a page transition, so it slides
- * from the old item to the new one instead of blinking.
+ * Left rail on desktop, top bar on phones. The active link carries
+ * `view-transition-name: nav-active` during a page transition, so the pill
+ * slides from the old item to the new one, label and all. (Naming only the
+ * background would paint it above the label mid-transition.)
  */
 export function Sidebar() {
   const route = useRoute();
@@ -99,14 +104,14 @@ export function Sidebar() {
                     'transition-colors duration-(--duration-fast) ease-(--ease-standard)',
                     'focus-visible:ring-1 focus-visible:ring-ring',
                     active
-                      ? 'text-sidebar-accent-foreground'
+                      ? 'nav-active text-sidebar-accent-foreground'
                       : 'text-muted-foreground hover:text-foreground',
                   )}
                 >
                   {active && (
                     <span
                       aria-hidden="true"
-                      className="nav-active absolute inset-0 bg-sidebar-accent ring-1 ring-foreground/10"
+                      className="absolute inset-0 bg-sidebar-accent ring-1 ring-foreground/10"
                     />
                   )}
                   <IconComponent
@@ -129,7 +134,10 @@ export function Sidebar() {
         </ul>
       </nav>
 
-      <MotionSwitch />
+      <div className="flex shrink-0 items-center gap-3 md:mt-auto md:flex-col md:items-stretch md:gap-3 md:border-t md:px-2 md:pt-4">
+        <ThemeToggle />
+        <MotionSwitch />
+      </div>
     </aside>
   );
 }
@@ -138,7 +146,7 @@ function MotionSwitch() {
   const { preference, reduced, active, setPreference } = useMotion();
 
   return (
-    <div className="flex shrink-0 flex-col items-end gap-1.5 md:mt-auto md:items-stretch md:border-t md:px-2 md:pt-4">
+    <div className="flex flex-col items-end gap-1.5 md:items-stretch">
       <div className="flex items-center justify-between gap-3">
         <Label htmlFor="motion-switch" className="text-sm">
           Motion
@@ -161,6 +169,33 @@ function MotionSwitch() {
             ? 'view transitions · @starting-style · flip · springs · scroll-driven'
             : 'off · every change is a cut'}
       </p>
+    </div>
+  );
+}
+
+function ThemeToggle() {
+  const { theme, toggle } = useTheme();
+  const dark = theme === 'dark';
+  const IconComponent = dark ? MoonIcon : SunIcon;
+
+  return (
+    <div className="flex items-center justify-between gap-3">
+      <span className="hidden text-sm md:inline">Theme</span>
+      <Button
+        variant="outline"
+        size="icon-sm"
+        className="press"
+        aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+        aria-pressed={dark}
+        // The circle grows from this button.
+        onClick={(event) => toggle(event.currentTarget)}
+      >
+        <IconComponent
+          key={theme}
+          weight="fill"
+          className="theme-icon size-4"
+        />
+      </Button>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 # Punchlist
 
-Punchlist is a small team task tracker with one switch in the sidebar. With
+Punchlist is a small team task tracker with a light/dark toggle and one
+motion switch in the sidebar. With
 motion on, the app uses the platform's current motion features; with motion
 off, every change is a cut. Same app, same data, so you can judge what the
 motion is actually telling you.
@@ -34,6 +35,7 @@ Live: https://jbouder.github.io/punchlist/
 | Chart bars grow in | state change (enter) | `scale` from 0 with `@starting-style`, `transform` only |
 | Activity feed rows | scroll-linked | `animation-timeline: view()` inside the feed's own scroller |
 | "Clear all tasks" confirm | state change | Base UI dialog `data-starting-style` / `data-ending-style` |
+| Light / dark toggle | state change | View Transition on the root snapshot, new theme revealed by a `clip-path` circle growing from the button |
 
 One attribute, `html[data-motion="off"]`, zeroes every CSS duration and delay
 and switches off the scroll-driven animation by name (scroll timelines ignore

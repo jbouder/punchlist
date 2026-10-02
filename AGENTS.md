@@ -34,7 +34,10 @@ CLI-managed, do not hand-edit) · Phosphor icons · Biome. No router library
   Analytics counter, which transitions a registered custom property.
 - **Scope `view-transition-name`s** with `html[data-vt="…"]` (set by
   `withViewTransition(update, enabled, type)`), so an element is only
-  snapshotted separately during its own kind of transition.
+  snapshotted separately during its own kind of transition. Types in use:
+  `filter`, `page`, `theme`.
+- **Named elements paint above the root snapshot.** Name the element whose
+  content should travel (the whole nav link), not a background behind text.
 - **New pages**: add the path to `PATHS` in `src/lib/router.ts`, the component
   to `PAGES` in `AppShell.tsx`, and the nav item in `Sidebar.tsx`. Page order
   in `PATHS` decides the slide direction.
