@@ -296,20 +296,35 @@ html[data-vt="page"] .nav-active {
   }
 }
 
-/* Theme changes: the whole page is one snapshot, and the new one is revealed
-   through a circle that grows from the button that was clicked. The old
-   snapshot just sits underneath, so there is no crossfade to fight. */
+/* Theme changes: the whole page is one snapshot. The new one fades in behind
+   a feathered radial mask that grows from the button that was clicked, so
+   the new colors bloom out gently rather than wiping across. `--theme-reveal`
+   is registered so the gradient's radius can animate. */
+@property --theme-reveal {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
 html[data-vt="theme"]::view-transition-new(root) {
-  animation: theme-reveal var(--duration-slow) var(--ease-emphasized) both;
+  mask-image: radial-gradient(
+    circle at var(--theme-x, 50%) var(--theme-y, 50%),
+    #000 calc(var(--theme-reveal) * 0.7),
+    transparent var(--theme-reveal)
+  );
+  animation: theme-reveal calc(var(--duration-slow) * 1.5) var(--ease-standard)
+    both;
 }
 @keyframes theme-reveal {
   from {
-    clip-path: circle(0 at var(--theme-x, 50%) var(--theme-y, 50%));
+    opacity: 0;
+    --theme-reveal: 0px;
+  }
+  40% {
+    opacity: 1;
   }
   to {
-    clip-path: circle(
-      var(--theme-r, 150vmax) at var(--theme-x, 50%) var(--theme-y, 50%)
-    );
+    opacity: 1;
+    --theme-reveal: calc(var(--theme-r, 150vmax) * 2);
   }
 }
 

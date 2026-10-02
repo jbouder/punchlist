@@ -35,7 +35,7 @@ Live: https://jbouder.github.io/punchlist/
 | Chart bars grow in | state change (enter) | `scale` from 0 with `@starting-style`, `transform` only |
 | Activity feed rows | scroll-linked | `animation-timeline: view()` inside the feed's own scroller |
 | "Clear all tasks" confirm | state change | Base UI dialog `data-starting-style` / `data-ending-style` |
-| Light / dark toggle | state change | View Transition on the root snapshot, new theme revealed by a `clip-path` circle growing from the button |
+| Light / dark toggle | state change | View Transition on the root snapshot; the new theme fades in behind a feathered radial `mask-image` growing from the button |
 
 One attribute, `html[data-motion="off"]`, zeroes every CSS duration and delay
 and switches off the scroll-driven animation by name (scroll timelines ignore
