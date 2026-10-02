@@ -187,8 +187,7 @@ function ThemeToggle() {
         className="press"
         aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
         aria-pressed={dark}
-        // The circle grows from this button.
-        onClick={(event) => toggle(event.currentTarget)}
+        onClick={() => toggle()}
       >
         <IconComponent
           key={theme}

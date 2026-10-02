@@ -296,35 +296,15 @@ html[data-vt="page"] .nav-active {
   }
 }
 
-/* Theme changes: the whole page is one snapshot. The new one fades in behind
-   a feathered radial mask that grows from the button that was clicked, so
-   the new colors bloom out gently rather than wiping across. `--theme-reveal`
-   is registered so the gradient's radius can animate. */
-@property --theme-reveal {
-  syntax: "<length>";
-  inherits: false;
-  initial-value: 0px;
-}
+/* Theme changes: the whole page is one snapshot and the new one simply fades
+   in over the old. Short and plain on purpose: a color change needs no
+   choreography, it just should not snap. */
 html[data-vt="theme"]::view-transition-new(root) {
-  mask-image: radial-gradient(
-    circle at var(--theme-x, 50%) var(--theme-y, 50%),
-    #000 calc(var(--theme-reveal) * 0.7),
-    transparent var(--theme-reveal)
-  );
-  animation: theme-reveal calc(var(--duration-slow) * 1.5) var(--ease-standard)
-    both;
+  animation: theme-fade var(--duration-base) var(--ease-standard) both;
 }
-@keyframes theme-reveal {
+@keyframes theme-fade {
   from {
     opacity: 0;
-    --theme-reveal: 0px;
-  }
-  40% {
-    opacity: 1;
-  }
-  to {
-    opacity: 1;
-    --theme-reveal: calc(var(--theme-r, 150vmax) * 2);
   }
 }
 

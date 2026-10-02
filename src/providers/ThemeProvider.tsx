@@ -16,11 +16,8 @@ const STORAGE_KEY = 'punchlist:theme';
 
 interface ThemeContextValue {
   theme: Theme;
-  /**
-   * Flip the theme. Pass the element that was clicked and the new colors
-   * sweep out from it in a circle (a view transition clipped by `clip-path`).
-   */
-  toggle: (origin?: HTMLElement | null) => void;
+  /** Flip the theme inside a short crossfade (a view transition). */
+  toggle: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
@@ -47,36 +44,19 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     apply(theme);
   }, [theme]);
 
-  const toggle = useCallback(
-    (origin?: HTMLElement | null) => {
-      const next: Theme = theme === 'dark' ? 'light' : 'dark';
-      const root = document.documentElement;
-
-      // Circle center and the radius that reaches the farthest corner.
-      const rect = origin?.getBoundingClientRect();
-      const x = rect ? rect.left + rect.width / 2 : window.innerWidth / 2;
-      const y = rect ? rect.top + rect.height / 2 : window.innerHeight / 2;
-      const r = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y),
-      );
-      root.style.setProperty('--theme-x', `${x}px`);
-      root.style.setProperty('--theme-y', `${y}px`);
-      root.style.setProperty('--theme-r', `${r}px`);
-
-      // The class has to change inside the transition callback so the "new"
-      // snapshot is taken in the new theme; the state update follows.
-      withViewTransition(
-        () => {
-          apply(next);
-          setTheme(next);
-        },
-        active,
-        'theme',
-      );
-    },
-    [theme, active],
-  );
+  const toggle = useCallback(() => {
+    const next: Theme = theme === 'dark' ? 'light' : 'dark';
+    // The class has to change inside the transition callback so the "new"
+    // snapshot is taken in the new theme; the state update follows.
+    withViewTransition(
+      () => {
+        apply(next);
+        setTheme(next);
+      },
+      active,
+      'theme',
+    );
+  }, [theme, active]);
 
   const value = useMemo(() => ({ theme, toggle }), [theme, toggle]);
 
